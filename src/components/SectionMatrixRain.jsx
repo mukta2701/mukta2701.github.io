@@ -1,7 +1,20 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const SectionMatrixRain = ({ opacity = 0.15 }) => {
   const canvasRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -14,8 +27,9 @@ const SectionMatrixRain = ({ opacity = 0.15 }) => {
     }
     updateSize()
 
-    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン10'
-    const fontSize = 14
+    // Reduce complexity on mobile
+    const chars = isMobile ? '01' : '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン10'
+    const fontSize = isMobile ? 12 : 14
     const columns = canvas.width / fontSize
     const drops = Array.from({ length: Math.floor(columns) }, () => Math.random() * -50)
 
@@ -29,17 +43,21 @@ const SectionMatrixRain = ({ opacity = 0.15 }) => {
         const text = chars[Math.floor(Math.random() * chars.length)]
         const x = i * fontSize
 
-        // Green with gradient
-        const gradient = ctx.createLinearGradient(0, y * fontSize - 15, 0, y * fontSize)
-        gradient.addColorStop(0, 'rgba(0, 255, 70, 0.2)')
-        gradient.addColorStop(1, 'rgba(0, 255, 70, 0.8)')
+        // Simplified gradient for mobile, full gradient for desktop
+        if (isMobile) {
+          ctx.fillStyle = 'rgba(0, 255, 70, 0.6)'
+        } else {
+          const gradient = ctx.createLinearGradient(0, y * fontSize - 15, 0, y * fontSize)
+          gradient.addColorStop(0, 'rgba(0, 255, 70, 0.2)')
+          gradient.addColorStop(1, 'rgba(0, 255, 70, 0.8)')
+          ctx.fillStyle = gradient
+        }
 
-        ctx.fillStyle = gradient
         ctx.font = `${fontSize}px monospace`
         ctx.fillText(text, x, y * fontSize)
 
-        // Occasional blue accent
-        if (Math.random() > 0.97) {
+        // Occasional blue accent (less frequent on mobile)
+        if (!isMobile && Math.random() > 0.97) {
           ctx.fillStyle = 'rgba(59, 130, 246, 0.6)'
           ctx.fillText(text, x, y * fontSize)
         }
@@ -52,7 +70,8 @@ const SectionMatrixRain = ({ opacity = 0.15 }) => {
       })
     }
 
-    const interval = setInterval(draw, 40)
+    // Lower frame rate on mobile (60ms instead of 40ms)
+    const interval = setInterval(draw, isMobile ? 60 : 40)
 
     const handleResize = () => {
       updateSize()
@@ -64,13 +83,13 @@ const SectionMatrixRain = ({ opacity = 0.15 }) => {
       clearInterval(interval)
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <canvas
       ref={canvasRef}
       className="absolute top-0 left-0 w-full h-full pointer-events-none"
-      style={{ 
+      style={{
         opacity: opacity,
         zIndex: 0
       }}
