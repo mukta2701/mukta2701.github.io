@@ -15,19 +15,6 @@ import SecurityStatus from './components/SecurityStatus'
 
 function App() {
   const [darkMode, setDarkMode] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    // Detect mobile device
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   useEffect(() => {
     if (darkMode) {
@@ -45,9 +32,8 @@ function App() {
         ? 'bg-[#0a0a0f] text-gray-100'
         : 'bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/40 text-gray-900'
     }`}>
-      {/* Only show full-screen effects on desktop for better mobile performance */}
-      {darkMode && !isMobile && <BinaryBackground />}
-      {darkMode && !isMobile && <MatrixRain />}
+      {darkMode && <BinaryBackground />}
+      {darkMode && <MatrixRain />}
       <SecurityStatus />
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <main>
