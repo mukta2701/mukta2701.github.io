@@ -31,9 +31,9 @@ function ProjectExplorer() {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    const revealHashTarget = () => {
-      const slug = window.location.hash.slice('#project-'.length)
-      if (!window.location.hash.startsWith('#project-')) return
+    const revealHashTarget = (hash = window.location.hash) => {
+      if (!hash.startsWith('#project-')) return
+      const slug = hash.slice('#project-'.length)
       if (!projects.some((project) => project.slug === slug)) return
 
       setActiveFilter('All')
@@ -45,9 +45,31 @@ function ProjectExplorer() {
       })
     }
 
+    const onHashChange = () => revealHashTarget()
+    const onDocumentClick = (event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return
+      }
+
+      const anchor = event.target.closest?.('a[href^="#project-"]')
+      if (!anchor || (anchor.target && anchor.target !== '_self')) return
+      revealHashTarget(anchor.getAttribute('href'))
+    }
+
     revealHashTarget()
-    window.addEventListener('hashchange', revealHashTarget)
-    return () => window.removeEventListener('hashchange', revealHashTarget)
+    window.addEventListener('hashchange', onHashChange)
+    document.addEventListener('click', onDocumentClick)
+    return () => {
+      window.removeEventListener('hashchange', onHashChange)
+      document.removeEventListener('click', onDocumentClick)
+    }
   }, [])
 
   const visibleProjects = useMemo(() => {
@@ -62,15 +84,16 @@ function ProjectExplorer() {
           !normalizedQuery || searchableText(project).includes(normalizedQuery)
 
         return matchesFilter && matchesQuery
-        })
+      })
   }, [activeFilter, query])
 
   return (
     <section className="project-explorer" aria-label="Project explorer">
       <div className="project-toolbar">
-        <label className="search-field">
-          <span>Search projects</span>
+        <div className="search-field">
+          <label htmlFor="project-search">Search projects</label>
           <input
+            id="project-search"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -81,7 +104,7 @@ function ProjectExplorer() {
               Clear search
             </button>
           )}
-        </label>
+        </div>
 
         <div className="project-filters" role="group" aria-label="Filter projects by category">
           {filters.map((filter) => (
