@@ -1,0 +1,17 @@
+max_ttl_days: 14
+require_github_issue: true
+entries:
+  - id: 42646a1d4b06f873
+    reason: Static ticker skill labels in src/App.jsx. No LLM call or prompt is built.
+    privacy_approver: Mukta Choudhury
+    security_approver: Mukta Choudhury
+    ticket: https://github.com/mukta2701/mukta2701.github.io/issues/1
+    created_on: 2026-10-28
+    expires_on: 2026-11-11
+  - id: 9edd2e5a67a37787
+    reason: Static "Try a prompt injection" button label in src/components/HeroDiagram.jsx. No LLM call or prompt is built.
+    privacy_approver: Mukta Choudhury
+    security_approver: Mukta Choudhury
+    ticket: https://github.com/mukta2701/mukta2701.github.io/issues/1
+    created_on: 2026-10-28
+    expires_on: 2026-11-11

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Search } from 'lucide-react'
 import { projects } from '../data/projects.js'
+import { sayByte } from './Playful'
 
 const filters = [
   'All',
@@ -87,11 +89,17 @@ function ProjectExplorer() {
       })
   }, [activeFilter, query])
 
+  const nothingFound = visibleProjects.length === 0
+  useEffect(() => {
+    if (nothingFound) sayByte('Hmm… nothing here. Try another word?', 'search')
+  }, [nothingFound])
+
   return (
     <section className="project-explorer" aria-label="Project explorer">
       <div className="project-toolbar">
         <div className="search-field">
-          <label htmlFor="project-search">Search projects</label>
+          <Search size={15} aria-hidden="true" />
+          <label className="visually-hidden" htmlFor="project-search">Search projects</label>
           <input
             id="project-search"
             type="search"
@@ -127,11 +135,12 @@ function ProjectExplorer() {
 
       {visibleProjects.length > 0 ? (
         <div className="project-grid">
-          {visibleProjects.map(({ project, index }) => (
+          {visibleProjects.map(({ project, index }, position) => (
             <article
-              className="project-card"
+              className="project-card spotlight"
               id={`project-${project.slug}`}
               key={project.slug}
+              style={{ '--card-index': Math.min(position, 8) }}
             >
               <div className="project-meta">
                 <span className="project-number">
@@ -140,7 +149,7 @@ function ProjectExplorer() {
                 <span className="project-status">{project.status}</span>
               </div>
 
-              <p>{project.category}</p>
+              <p className="project-category">{project.category}</p>
               <h3>{project.title}</h3>
               <p>{project.summary}</p>
 
