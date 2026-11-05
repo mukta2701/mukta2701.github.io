@@ -217,10 +217,15 @@ h1 em, h2 em { font-weight: 400; }
 .social-links a { display: inline-flex; align-items: center; gap: 6px; color: #c5c8bd; text-decoration: none; font-size: 11px; }
 .social-links a:hover { color: var(--lime); }
 .site-footer { background: var(--paper-deep); }
-.footer-inner { min-height: 83px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.footer-inner { min-height: 83px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 .footer-inner > p, .back-top { margin: 0; color: var(--muted); font-size: 11px; text-decoration: none; }
 .footer-copyright { white-space: nowrap; }
 .back-top:hover { color: var(--ink); }
+
+@media (max-width: 1100px) {
+  .footer-inner { padding-right: 64px; }
+  .footer-inner > p { order: 3; width: 100%; }
+}
 
 @media (max-width: 900px) {
   .page-wrap { width: min(100% - 56px, 720px); }
