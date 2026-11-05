@@ -243,7 +243,7 @@ function App() {
       </main>
       <BugCounter found={foundBugs} onReset={resetBugs} />
       <Mascot dark={dark} />
-      <footer className="site-footer"><div className="page-wrap footer-inner"><a className="wordmark" href="#top"><span className="wordmark-mark">MC</span><span>Mukta Choudhury</span></a><p>AI security & application security · Amersham, UK <span className="footer-hint">· psst, try ↑↑↓↓←→←→BA</span></p><HiddenBug id="footer" found={foundBugs} onFind={catchBug} className="bug-footer" /><a href="#top" className="back-top">Back to top ↑</a></div></footer>
+      <footer className="site-footer"><div className="page-wrap footer-inner"><a className="wordmark" href="#top"><span className="wordmark-mark">MC</span><span>Mukta Choudhury</span></a><p>AI security & application security · Amersham, UK <span className="footer-hint">· psst, try ↑↑↓↓←→←→BA</span></p><HiddenBug id="footer" found={foundBugs} onFind={catchBug} className="bug-footer" /><p className="footer-copyright">© {new Date().getFullYear()} Mukta Choudhury. All rights reserved.</p><a href="#top" className="back-top">Back to top ↑</a></div></footer>
     </div>
   )
 }
